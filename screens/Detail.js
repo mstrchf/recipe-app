@@ -11,8 +11,8 @@ import {
 
 import AnimatedHeader from "../components/AnimatedHeader";
 
-const Detail = ({ route }) => {
-  const { recipe } = route.params;
+const Detail = ({ route, navigation }) => {
+  const { recipe, setFavorites } = route.params;
   const offset = useRef(new Animated.Value(0)).current;
 
   return (
@@ -32,7 +32,7 @@ const Detail = ({ route }) => {
         <Text style={{ fontSize: 28, color: "white" }}>{recipe.name}</Text>
       </ImageBackground> */}
 
-      <AnimatedHeader animatedValue={offset} recipe={recipe} />
+      <AnimatedHeader animatedValue={offset} recipe={recipe} navigation={navigation} setFavorites={setFavorites} />
 
       <ScrollView
         style={{ flex: 1 }}

@@ -5,35 +5,18 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  Image,
-  TouchableOpacity,
+ 
 } from "react-native";
+
 
 import data from "../data/recipe";
 import SearchBar from "../components/SearchBar";
+import RecipeItem from "../components/RecipeItem";
+import Header from "../components/Header";
 
-const Item = ({ item, navigation }) => (
-  <TouchableOpacity activeOpacity={0.75} style={styles.item} onPress={() => navigation.navigate('Detail', {recipe: item})}>
-    <Image
-      resizeMode="cover"
-      source={{ uri: item.image }}
-      style={{
-        width: 100,
-        height: 100,
-        borderBottomLeftRadius: 10,
-        borderTopLeftRadius: 10,
-        marginEnd: 10,
-      }}
-    />
-    <View>
-      <Text style={styles.title}>{item.name}</Text>
-      <Text style={styles.sub}>Preparation time: {item.prepTime} sec</Text>
-    </View>
-  </TouchableOpacity>
-);
-
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [favorites, setFavorites] = React.useState([]);
 
   const filteredData = data.filter((recipe) =>
     recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -41,24 +24,34 @@ const Home = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar
-      
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+      <Header navigation={navigation} favorites={favorites}/>
 
-      <Text>Search or select a recipe from below</Text>
-      <FlatList
-        data={filteredData}
-        renderItem={({ item }) => <Item item={item} navigation={navigation} />}
-        // keyExtractor={(item) => item.id}
-      />
+      <View style={styles.main}>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
+        <Text>Search or select a recipe from below</Text>
+        <FlatList
+          data={filteredData}
+          renderItem={({ item }) => (
+            <RecipeItem
+              item={item}
+              navigation={navigation}
+              setFavorites={setFavorites}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+
+  main: {
     flex: 1,
     padding: 20,
   },
@@ -74,8 +67,18 @@ const styles = StyleSheet.create({
   },
 
   sub: {
-    color: 'grey'
-  }
+    color: "grey",
+  },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "rgba(52,78,65,0.8)",
+    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingBottom: 15,
+  },
 });
 
 export default Home;
