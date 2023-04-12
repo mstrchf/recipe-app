@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TextInput, View, Keyboard, } from "react-native";
+import { StyleSheet, TextInput, View, Keyboard } from "react-native";
 import { Feather, Entypo } from "@expo/vector-icons";
 
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
@@ -23,6 +23,7 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => {
           onFocus={() => {
             setClicked(true);
           }}
+          onBlur={() => setClicked(false)}
         />
       </View>
 

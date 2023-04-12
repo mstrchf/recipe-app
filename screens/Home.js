@@ -5,15 +5,15 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  StatusBar,
   Image,
+  TouchableOpacity,
 } from "react-native";
 
 import data from "../data/recipe";
 import SearchBar from "../components/SearchBar";
 
-const Item = ({ item }) => (
-  <View style={styles.item}>
+const Item = ({ item, navigation }) => (
+  <TouchableOpacity activeOpacity={0.75} style={styles.item} onPress={() => navigation.navigate('Detail', {recipe: item})}>
     <Image
       resizeMode="cover"
       source={{ uri: item.image }}
@@ -27,17 +27,13 @@ const Item = ({ item }) => (
     />
     <View>
       <Text style={styles.title}>{item.name}</Text>
-      <Text style={styles.sub}>Preparation time: {item.prepTime}</Text>
+      <Text style={styles.sub}>Preparation time: {item.prepTime} sec</Text>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [searchQuery, setSearchQuery] = React.useState("");
-
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-  };
 
   const filteredData = data.filter((recipe) =>
     recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -46,7 +42,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
-        handleSearch={handleSearch}
+      
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
@@ -54,8 +50,8 @@ const Home = () => {
       <Text>Search or select a recipe from below</Text>
       <FlatList
         data={filteredData}
-        renderItem={({ item }) => <Item item={item} />}
-        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <Item item={item} navigation={navigation} />}
+        // keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );
@@ -76,6 +72,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
   },
+
+  sub: {
+    color: 'grey'
+  }
 });
 
 export default Home;
