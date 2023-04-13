@@ -2,13 +2,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const Header = ({ navigation, favorites }) => {
+const Header = ({ navigation }) => {
   return (
     <View style={styles.header}>
       <Text style={styles.title}>Recipe go</Text>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("Favorite", { favorites: favorites })
+          navigation.navigate("Favorite")
         }
       >
         <MaterialIcons name="collections-bookmark" size={28} color="black" />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -8,23 +8,40 @@ import {
 } from "react-native";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
+import { AppContext } from "../screens/AppContext";
+
 const MAX_HEADER_HEIGHT = 300;
 const MIN_HEADER_HEIGHT = 50;
 const Scroll_Distance = MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT;
 
-const AnimatedHeader = ({
-  animatedValue,
-  recipe,
-  navigation,
-  setFavorites,
-}) => {
+const AnimatedHeader = ({ animatedValue, recipe, navigation }) => {
   const headerHeight = animatedValue.interpolate({
     inputRange: [0, Scroll_Distance],
     outputRange: [MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT],
     extrapolate: "clamp",
   });
 
+  const { favorites, setFavorites } = useContext(AppContext);
   const [bookmarked, setBookmarked] = useState(false);
+
+  // filteredFav = favorites.filter((favoriteRecipe) =>
+  //   favoriteRecipe.name.toLowerCase().equals(recipe.name.toLowerCase())
+
+  const isEmpty = (arr) => (arr.length < 1 ? true : false);
+
+  const foundMatch = (arr) => {
+    if (isEmpty(arr)) return false;
+
+    let res = arr.filter((item) =>
+      item.name.toLowerCase() == recipe.name.toLowerCase());
+
+    return res.length ? true : false;
+  };
+
+ useEffect(() => {
+  setBookmarked(foundMatch(favorites))
+ }, []);
+
   return (
     <View style={styles.container}>
       <Animated.Image
@@ -46,10 +63,15 @@ const AnimatedHeader = ({
         <Text style={styles.title}>{recipe.name}</Text>
         <TouchableOpacity
           onPress={() => {
-            if (!bookmarked) alert("Recipe added to favorites");
-
-            setBookmarked(!bookmarked);
-            setFavorites((prev) => [...prev, recipe]);
+            if (!foundMatch(favorites)) {
+              setFavorites((prev) => [...prev, recipe]);
+              alert("Recipe added to favorites");
+              setBookmarked(!bookmarked);
+            } else {
+              setFavorites(favorites.filter(item => item.name.toLowerCase() != recipe.name.toLowerCase()));
+              alert("Recipe removed from favorites");
+              setBookmarked(!bookmarked);
+            }
           }}
         >
           <MaterialIcons

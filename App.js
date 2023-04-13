@@ -2,50 +2,61 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useState, useMemo } from "react";
 
 import Home from "./screens/Home";
 import Detail from "./screens/Detail";
 import Favorite from "./screens/Favorite";
+import { AppContext } from "./screens/AppContext";
 
 const Stack = createNativeStackNavigator();
 
+
 export default function App() {
+  const [favorites, setFavorites] = useState([]);
+  const contextValue = useMemo(
+    () => ({ favorites, setFavorites }),
+    [favorites, setFavorites]
+  );
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={({ route, navigation }) => ({
-            headerShown: false,
-            title: "Recipe Go",
-          })}
-        />
-        <Stack.Screen
-          name="Favorite"
-          component={Favorite}
-          options={({ route, navigation }) => ({
-            title: "Favorites",
-            headerTitleAlign: "center",
-            headerLeft: () => (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Ionicons
-                  name="arrow-back-circle-outline"
-                  size={34}
-                  color="black"
-                />
-              </TouchableOpacity>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="Detail"
-          component={Detail}
-          options={({ route, navigation }) => ({
-            headerShown: false,
-          })}
-        />
-      </Stack.Navigator>
+      <AppContext.Provider value={contextValue}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={() => ({
+              headerShown: false,
+              title: "Recipe Go",
+            })}
+          />
+          <Stack.Screen
+            name="Favorite"
+            component={Favorite}
+            options={({ navigation }) => ({
+              title: "Favorites",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Ionicons
+                    name="arrow-back-circle-outline"
+                    size={34}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="Detail"
+            component={Detail}
+            options={({ route, navigation }) => ({
+              headerShown: false,
+            })}
+          />
+        </Stack.Navigator>
+      </AppContext.Provider>
     </NavigationContainer>
   );
 }

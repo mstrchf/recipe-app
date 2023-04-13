@@ -12,27 +12,13 @@ import {
 import AnimatedHeader from "../components/AnimatedHeader";
 
 const Detail = ({ route, navigation }) => {
-  const { recipe, setFavorites } = route.params;
+  const { recipe } = route.params;
   const offset = useRef(new Animated.Value(0)).current;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <ImageBackground
-        resizeMode="cover"
-        source={{ uri: recipe.image }}
-        style={{
-          width: "100%",
-          height: 100,
-          justifyContent: "flex-end",
-          alignItems: "center",
-          paddingBottom: 20,
-          zIndex: 1,
-        }}
-      >
-        <Text style={{ fontSize: 28, color: "white" }}>{recipe.name}</Text>
-      </ImageBackground> */}
 
-      <AnimatedHeader animatedValue={offset} recipe={recipe} navigation={navigation} setFavorites={setFavorites} />
+      <AnimatedHeader animatedValue={offset} recipe={recipe} navigation={navigation} />
 
       <ScrollView
         style={{ flex: 1 }}

@@ -16,15 +16,13 @@ import Header from "../components/Header";
 
 const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [favorites, setFavorites] = React.useState([]);
-
   const filteredData = data.filter((recipe) =>
     recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} favorites={favorites}/>
+      <Header navigation={navigation}/>
 
       <View style={styles.main}>
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -36,7 +34,6 @@ const Home = ({ navigation }) => {
             <RecipeItem
               item={item}
               navigation={navigation}
-              setFavorites={setFavorites}
             />
           )}
           keyExtractor={(item) => item.id}
