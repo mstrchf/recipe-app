@@ -9,6 +9,7 @@ import {
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 import { AppContext } from "../screens/AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MAX_HEADER_HEIGHT = 300;
 const MIN_HEADER_HEIGHT = 50;
@@ -32,15 +33,37 @@ const AnimatedHeader = ({ animatedValue, recipe, navigation }) => {
   const foundMatch = (arr) => {
     if (isEmpty(arr)) return false;
 
-    let res = arr.filter((item) =>
-      item.name.toLowerCase() == recipe.name.toLowerCase());
+    let res = arr.filter(
+      (item) => item.name.toLowerCase() == recipe.name.toLowerCase()
+    );
 
     return res.length ? true : false;
   };
 
- useEffect(() => {
-  setBookmarked(foundMatch(favorites))
- }, []);
+  const saveRecipe = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(value.name, jsonValue)
+    } catch (e) {
+      // save error
+    }
+
+    console.log(value);
+  };
+
+  const removeRecipe = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log("Done.");
+  }
+
+  useEffect(() => {
+    setBookmarked(foundMatch(favorites));
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -65,10 +88,16 @@ const AnimatedHeader = ({ animatedValue, recipe, navigation }) => {
           onPress={() => {
             if (!foundMatch(favorites)) {
               setFavorites((prev) => [...prev, recipe]);
+              saveRecipe(recipe)
               alert("Recipe added to favorites");
               setBookmarked(!bookmarked);
             } else {
-              setFavorites(favorites.filter(item => item.name.toLowerCase() != recipe.name.toLowerCase()));
+              setFavorites(
+                favorites.filter(
+                  (item) => item.name.toLowerCase() != recipe.name.toLowerCase()
+                )
+              );
+              removeRecipe(recipe.name)
               alert("Recipe removed from favorites");
               setBookmarked(!bookmarked);
             }

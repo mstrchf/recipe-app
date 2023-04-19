@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   Animated,
-  ImageBackground,
   ScrollView,
   SafeAreaView,
 } from "react-native";

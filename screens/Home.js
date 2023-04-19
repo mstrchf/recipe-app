@@ -12,7 +12,6 @@ import {
 import data from "../data/recipe";
 import SearchBar from "../components/SearchBar";
 import RecipeItem from "../components/RecipeItem";
-import Header from "../components/Header";
 
 const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -22,7 +21,7 @@ const Home = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation}/>
+      {/* <Header navigation={navigation}/> */}
 
       <View style={styles.main}>
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
